@@ -1,0 +1,56 @@
+.main {
+  min-height: calc(100vh - 60px);
+}
+
+.hero {
+  align-items: center;
+  background:
+    linear-gradient(rgba(9, 17, 31, 0.76), rgba(9, 17, 31, 0.62)),
+    url('/img/stellar-grid.svg');
+  background-position: center;
+  background-size: cover;
+  display: flex;
+  min-height: 72vh;
+  padding: 5rem 1.5rem;
+}
+
+.heroContent {
+  color: #ffffff;
+  margin: 0 auto;
+  max-width: 840px;
+  width: 100%;
+}
+
+.kicker {
+  color: #8fe3d3;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+}
+
+.hero h1 {
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  line-height: 1;
+  margin-bottom: 1.5rem;
+  max-width: 780px;
+}
+
+.lede {
+  color: #d7e5f0;
+  font-size: 1.2rem;
+  line-height: 1.7;
+  margin-bottom: 2rem;
+  max-width: 650px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.button {
+  border-radius: 6px;
+}
