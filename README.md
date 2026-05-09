@@ -33,7 +33,7 @@ Stellar's official docs are comprehensive but assume prior blockchain knowledge.
 
 ## Live Site
 
-> [devhub.cryptex.dev](https://devhub.cryptex.dev) *(hosted on Vercel, auto-deploys on merge to main)*
+> [devhub.cryptex.dev](https://devhub.dripslab.dev) *(hosted on Vercel, auto-deploys on merge to main)*
 
 ---
 
