@@ -15,7 +15,7 @@ const sidebars = {
       type: 'category',
       label: 'Core Concepts',
       collapsed: false,
-      items: ['core-concepts/accounts'],
+      items: ['core-concepts/accounts', 'glossary'],
     },
   ],
 };
