@@ -17,6 +17,12 @@ const sidebars = {
       collapsed: false,
       items: ['core-concepts/accounts', 'glossary'],
     },
+    {
+      type: 'category',
+      label: 'Soroban',
+      collapsed: false,
+      items: ['soroban/hello-world-testnet'],
+    },
   ],
 };
 
