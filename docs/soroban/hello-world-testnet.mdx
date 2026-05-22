@@ -1,0 +1,190 @@
+---
+id: hello-world-testnet
+title: Deploy a Soroban Hello World Contract
+description: Build, deploy, and invoke a small Soroban contract on Stellar testnet.
+---
+
+# Deploy a Soroban Hello World Contract
+
+This tutorial takes a new Soroban project from an empty folder to a deployed testnet contract. You will install the Rust and Stellar tools, write a small contract, build the WebAssembly artifact, deploy it, and invoke it on testnet.
+
+## Prerequisites
+
+Install these tools first:
+
+- Rust and Cargo from `https://rustup.rs`
+- The Stellar CLI
+- A terminal with network access to Stellar testnet
+
+Check the installed versions:
+
+```bash
+rustc --version
+cargo --version
+stellar --version
+```
+
+Add the WebAssembly target used by Soroban contracts:
+
+```bash
+rustup target add wasm32-unknown-unknown
+```
+
+## Create a contract project
+
+Create a new library crate:
+
+```bash
+cargo new soroban-hello --lib
+cd soroban-hello
+```
+
+Replace `Cargo.toml` with:
+
+```toml
+[package]
+name = "soroban-hello"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+soroban-sdk = "22"
+
+[dev-dependencies]
+soroban-sdk = { version = "22", features = ["testutils"] }
+```
+
+Replace `src/lib.rs` with:
+
+```rust
+#![no_std]
+
+use soroban_sdk::{contract, contractimpl, Env, String};
+
+#[contract]
+pub struct HelloContract;
+
+#[contractimpl]
+impl HelloContract {
+    pub fn hello(env: Env, name: String) -> String {
+        String::from_str(&env, "Hello, ").append(&name)
+    }
+}
+```
+
+## Build the WebAssembly contract
+
+Build the optimized contract artifact:
+
+```bash
+cargo build --target wasm32-unknown-unknown --release
+```
+
+The compiled contract is written to:
+
+```bash
+target/wasm32-unknown-unknown/release/soroban_hello.wasm
+```
+
+## Configure Stellar testnet
+
+Create and fund a testnet identity:
+
+```bash
+stellar keys generate dev --network testnet
+```
+
+Confirm the account is available:
+
+```bash
+stellar keys address dev
+```
+
+If the generated account is not funded automatically in your CLI version, fund the public key with Friendbot:
+
+```bash
+curl "https://friendbot.stellar.org?addr=$(stellar keys address dev)"
+```
+
+## Deploy the contract
+
+Deploy the compiled WebAssembly artifact to testnet:
+
+```bash
+stellar contract deploy \
+  --wasm target/wasm32-unknown-unknown/release/soroban_hello.wasm \
+  --source dev \
+  --network testnet
+```
+
+The command prints a contract ID. Save it in an environment variable:
+
+```bash
+export CONTRACT_ID="PASTE_CONTRACT_ID_HERE"
+```
+
+On Windows PowerShell, use:
+
+```powershell
+$env:CONTRACT_ID = "PASTE_CONTRACT_ID_HERE"
+```
+
+## Invoke the contract
+
+Call the `hello` function:
+
+```bash
+stellar contract invoke \
+  --id "$CONTRACT_ID" \
+  --source dev \
+  --network testnet \
+  -- \
+  hello \
+  --name "Devhub"
+```
+
+You should see a string result like:
+
+```text
+Hello, Devhub
+```
+
+## Try the same call from JavaScript
+
+The deployed contract can also be called from a JavaScript app through Stellar RPC. The example below builds the same invocation arguments you used with the CLI.
+
+```jsx live
+function SorobanHelloExample() {
+  const contractId = "PASTE_CONTRACT_ID_HERE";
+  const rpcUrl = "https://soroban-testnet.stellar.org";
+
+  return (
+    <pre>
+      {`Contract: ${contractId}
+RPC: ${rpcUrl}
+
+Use @stellar/stellar-sdk in your app to assemble, sign, and submit a
+transaction that invokes hello(name) on this contract.`}
+    </pre>
+  );
+}
+```
+
+## Troubleshooting
+
+If the build fails with a missing target error, run:
+
+```bash
+rustup target add wasm32-unknown-unknown
+```
+
+If deploy or invoke fails with an account error, confirm the `dev` identity exists and is funded:
+
+```bash
+stellar keys address dev
+```
+
+If the CLI cannot find the contract file, confirm the release build completed and that the `target/wasm32-unknown-unknown/release/soroban_hello.wasm` path exists.
